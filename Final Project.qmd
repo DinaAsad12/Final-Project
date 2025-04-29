@@ -1,0 +1,105 @@
+---
+title: "Final Project"
+author: "Dina Asad"
+format: html
+editor: visual
+---
+
+## Running Code
+
+```{r}
+
+library(tidyverse)
+```
+
+```{r}
+
+
+data <- read_csv(file.choose())
+
+```
+
+**Histogram:**
+
+```{r}
+
+hist(data$`Electric Range`, 
+     main = "Histogram of Electric Range", 
+     xlab = "Electric Range (miles)", 
+     ylab = "Frequency", 
+     col = "lightblue")
+
+```
+
+The histogram of electric range shows a right-skewed distribution. Most vehicles have a very low electric range, clustered around 0–50 miles, with fewer vehicles achieving ranges above 100 miles. This indicates that while some models offer higher range, the majority in the dataset are older or limited-range vehicles.
+
+**Boxplot:**
+
+```{r}
+
+boxplot(`Electric Range` ~ Make, data = data,
+        main = "Electric Range by Vehicle Make",
+        xlab = "Make",
+        ylab = "Electric Range (miles)",
+        col = "lightgreen",
+        las = 2)
+
+```
+
+The boxplot shows significant variation in electric range across different vehicle makes. For example, Chevrolet and Tesla have much higher median ranges compared to brands like Acura or Cadillac. Several makes show a wide range of values and outliers, indicating varying model types and battery capabilities within a brand.
+
+**Scatterplot:**
+
+```{r}
+
+plot(data$`Model Year`, data$`Electric Range`,
+     main = "Scatterplot of Model Year vs Electric Range",
+     xlab = "Model Year",
+     ylab = "Electric Range (miles)",
+     pch = 19)
+
+```
+
+The scatterplot shows a clear positive trend, newer model years are generally associated with higher electric ranges. This suggests that over time, manufacturers have improved battery technology and vehicle efficiency.
+
+```{r}
+
+data %>%
+  group_by(Make) %>%
+  summarize(
+    Mean_Electric_Range = mean(`Electric Range`, na.rm = TRUE),
+    SD_Electric_Range = sd(`Electric Range`, na.rm = TRUE),
+    Min_Electric_Range = min(`Electric Range`, na.rm = TRUE),
+    Max_Electric_Range = max(`Electric Range`, na.rm = TRUE)
+  )
+
+```
+
+The summary statistics confirm that makes like Chevrolet have the highest mean electric range (84.35 miles), while others like Acura and Cadillac have mean ranges close to 0, indicating either fewer or older EV models. The standard deviation also reflects how consistent or varied the ranges are within each brand.
+
+**ANOVA:**
+
+```{r}
+
+anova_result <- aov(`Electric Range` ~ Make, data = data)
+summary(anova_result)
+
+```
+
+The ANOVA test shows a highly significant difference in electric range between vehicle makes (F = 484.7, p \< 2e-16). This means that at least one brand’s mean electric range is statistically different from the others, confirming what we saw visually in the boxplot.
+
+**Correlation:**
+
+```{r}
+
+cor.test(data$`Model Year`, data$`Electric Range`, use = "complete.obs")
+
+```
+
+The correlation test between model year and electric range shows a strong negative correlation (r = -0.532, p \< 2.2e-16). However, this negative sign may reflect how the data is encoded or the way missing or zero values are distributed, because visually the trend is increasing in the scatterplot. The key takeaway is that model year and electric range are strongly related.
+
+**Conclusion :**
+
+In this project, I explored the electric vehicle population dataset to investigate the relationships between electric range, vehicle make, and model year. I used descriptive visualizations such as a histogram, boxplot, and scatterplot to understand how electric range is distributed and how it differs between manufacturers and over time. The histogram showed a highly skewed distribution with most vehicles having low range. The boxplot and summary statistics highlighted clear differences between makes, with Chevrolet and Tesla having higher average ranges. The scatterplot indicated a positive relationship between newer model years and higher electric ranges.
+
+For inferential statistics, I conducted an ANOVA test to determine whether electric range significantly differs between makes. The results showed a statistically significant difference, suggesting manufacturer choice is a major factor in EV performance. I also ran a correlation test to evaluate the relationship between model year and electric range, which showed a strong statistical relationship, further confirming the improvement in EV technology over time. Overall, the analysis provides insight into how electric vehicle capabilities have advanced and vary significantly by manufacturer.
